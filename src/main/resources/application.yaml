@@ -1,0 +1,74 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: TechAssessmentWebfluxService
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/tech_assessment_db
+    username: postgres
+    password: postgres_pwd
+    pool:
+      enabled: true
+      max-size: 20
+      initial-size: 5
+      validation-query: SELECT 1
+      max-idle-time: 30000
+      max-lifetime: 2000000
+      max-acquire-time: 30000
+      max-create-connection-time: 30000
+      max-validation-time: 600
+  flyway:
+    url: jdbc:postgresql://localhost:5432/tech_assessment_db
+    user: postgres
+    password: postgres_pwd
+    locations: classpath:db/migration
+  cache:
+    redis:
+      time-to-live: 20s
+      cache-null-values: false
+      use-key-prefix: true
+  data:
+    redis:
+      host: localhost
+      database: 0
+      port: 6379
+      timeout: 60000
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+      username: default
+      password: redis_pwd
+
+  kafka:
+    bootstrap-servers: "127.0.0.1:9092"
+    producer:
+      keySerializer: "org.apache.kafka.common.serialization.StringSerializer"
+      valueSerializer: "io.confluent.kafka.serializers.KafkaAvroSerializer"
+      properties:
+        schema:
+          registry:
+            url: "http://127.0.0.1:8081"
+    consumer:
+      group-id: "tech-assessment"
+      keyDeserializer: "org.apache.kafka.common.serialization.StringDeserializer"
+      valueDeserializer: "io.confluent.kafka.serializers.KafkaAvroDeserializer"
+      autoOffsetReset: "earliest"
+      properties:
+        schema:
+          registry:
+            url: "http://127.0.0.1:8081"
+        specific:
+          avro:
+            reader: "true"
+    tech-assessment:
+      customer-topic:
+        topic-name: customer
+        group-id: customer-group
+        concurrency: 3
+      product-topic:
+        topic-name: product
+        group-id: product-group
+        concurrency: 3

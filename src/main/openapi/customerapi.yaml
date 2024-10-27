@@ -1,0 +1,200 @@
+openapi: 3.0.1
+info:
+  title: TechAssessmentService API
+  version: 1.0.0
+servers:
+  - url: /api/v1
+paths:
+  /customers:
+    post:
+      summary: Create a new customer
+      operationId: createCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '201':
+          description: Customer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+    get:
+      summary: Get all customers
+      operationId: getCustomers
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: ageGreaterThan
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A list of customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+  /customers/submit:
+    post:
+      summary: Submit new customer creation by Kafka event
+      operationId: submitNewCustomer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '200':
+          description: Customer creation submitted
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Customer creation submitted"
+  /customers/search:
+    get:
+      summary: Search customers by field and value
+      operationId: searchCustomers
+      parameters:
+        - name: field
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: value
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customers matching the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+  /customers/{customerId}:
+    get:
+      summary: Get customer by ID
+      operationId: getCustomerById
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A single customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '404':
+          description: Customer not found
+    put:
+      summary: Update a customer
+      operationId: updateCustomer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '200':
+          description: Customer updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '404':
+          description: Customer not found
+    delete:
+      summary: Delete a customer
+      operationId: deleteCustomer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Customer deleted
+        '404':
+          description: Customer not found
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        customerId:
+          type: string
+        documentId:
+          type: string
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHERS
+        birthday:
+          type: string
+          format: date
+        mobileNumber:
+          type: string
+          pattern: '^\+?1?\d{9,15}$'
+        officeNumber:
+          type: string
+        officeEmail:
+          type: string
+          format: email
+        personalEmail:
+          type: string
+          format: email
+        familyMembers:
+          type: array
+          items:
+            type: string
+        address:
+          type: array
+          items:
+            type: string
+        customerType:
+          type: string
+        age:
+          type: integer

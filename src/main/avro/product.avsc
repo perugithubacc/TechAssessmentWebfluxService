@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "type": "record",
+  "name": "ProductRecord",
+  "namespace": "com.assessment.techassessmentwebfluxservice.model",
+  "fields": [
+    {
+      "name": "productId",
+      "type": "string"
+    },
+    {
+      "name": "productCode",
+      "type": "string"
+    },
+    {
+      "name": "productName",
+      "type": "string"
+    },
+    {
+      "name": "productDescription",
+      "type": [
+        "null",
+        "string"
+      ],
+      "default": null
+    },
+    {
+      "name": "productPrice",
+      "type": {
+        "type": "bytes",
+        "logicalType": "decimal",
+        "precision": 18,
+        "scale": 2
+      }
+    },
+    {
+      "name": "productQuantity",
+      "type": "int"
+    },
+    {
+      "name": "productType",
+      "type": "string"
+    }
+  ]
+}
