@@ -7,12 +7,14 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
+import javax.annotation.Nonnull;
 
 @Component
 public class LoggingFilter implements WebFilter {
     private static final Logger logger = LoggerFactory.getLogger(LoggingFilter.class);
 
     @Override
+    @Nonnull
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         logger.info("Incoming request: {} {}", exchange.getRequest().getMethod(), exchange.getRequest().getURI());
         return chain.filter(exchange).doOnSuccess(done ->

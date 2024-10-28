@@ -61,6 +61,7 @@ public class CustomerServiceImpl implements CustomerService {
                 ).flatMap(existingCustomerInfo -> customerMono
                         .flatMap(customer -> new CustomerEntity().toEntity(Mono.just(customer))
                                 .flatMap(newCustomerInfo -> {
+                                    newCustomerInfo.setCustomerId(Long.valueOf(customerId));
                                     if (existingCustomerInfo.equals(newCustomerInfo)) {
                                         return customerRepository.save(newCustomerInfo)
                                                 .flatMap(savedEntity -> {

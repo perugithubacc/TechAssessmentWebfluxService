@@ -60,6 +60,7 @@ public class ProductServiceImpl implements ProductService {
                 ).flatMap(existingProductInfo -> productMono
                         .flatMap(product -> new ProductEntity().toEntity(Mono.just(product))
                                 .flatMap(newProductInfo -> {
+                                    newProductInfo.setProductId(Long.valueOf(productId));
                                     if (existingProductInfo.equals(newProductInfo)) {
                                         return productRepository.save(newProductInfo)
                                                 .flatMap(savedEntity -> {
